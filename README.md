@@ -4,13 +4,13 @@
 
 ## Features
 
-- **Comprehensive Crawling**: Recursively explores all links within the base URL to discover forms and parameters.
-- **Advanced Payload Generation**: Uses a variety of payloads, including obfuscation techniques to bypass common security filters.
+- **Crawling**: Recursively explores all links within the base URL to discover forms and parameters.
+- **Payloads**: Uses a variety of payloads, including obfuscation techniques to bypass common security filters.
 - **Heuristic Analysis**: Implements heuristic methods to detect XSS vulnerabilities by analyzing the context and behavior of the payload in the response.
-- **Concurrent Scanning**: Utilizes multi-threading for efficient and fast scanning with customizable concurrency settings.
-- **Robust Error Handling**: Provides detailed error logging and manages various exceptions gracefully.
-- **Detailed Reporting**: Exports discovered vulnerabilities to JSON and CSV formats for easy analysis and reporting.
-- **Customizable Settings**: Allows users to customize settings such as user agents, timeout values, and the number of concurrent workers.
+- **Scanning**: Utilizes multi-threading for efficient and fast scanning with customizable concurrency settings.
+- **Error Handling**: Provides detailed error logging and manages various exceptions gracefully.
+- **Reporting**: Exports discovered vulnerabilities to JSON and CSV formats for easy analysis and reporting.
+
 
 ## Installation
 
@@ -67,4 +67,4 @@ Contributions are welcome! Please open an issue or submit a pull request with yo
 
 ## Contact
 
-For any questions or suggestions, feel free to open an issue or contact me.
+For any questions or suggestions, feel free to open an issue or contact me. shaykhul2004@gmail.com
