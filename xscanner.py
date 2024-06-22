@@ -35,7 +35,7 @@ class XScanner:
         return random.choice(user_agents)
 
     def generate_payloads(self):
-        """Generate a variety of XSS payloads."""
+        """Generate a variety of advanced XSS payloads."""
         basic_payloads = [
             "<script>alert('XSS')</script>",
             "<img src=x onerror=alert('XSS')>",
@@ -63,7 +63,7 @@ class XScanner:
             for technique in obfuscation_techniques:
                 payloads.append(technique(payload))
 
-        # more payloades
+        # Additional advanced payloads targeting different contexts
         additional_payloads = [
             "<img src=x onerror=alert(String.fromCharCode(88,83,83))>",
             "<svg><script>x='<img/'+'src=\"ht'\r+String.fromCharCode(116)+'p://ma'\r+String.fromCharCode(105)+'npage.com\"/>'; document.body.appendChild(document.createElement('img')).src=x;</script>",
@@ -138,8 +138,10 @@ class XScanner:
                     "payload": payload,
                     "form": form_details,
                 }
-                self.vulnerabilities.append(vulnerability)
-                logging.warning(f"XSS vulnerability detected: {vulnerability}")
+                # Avoid false positives check
+                if not self.is_false_positive(url, vulnerability):
+                    self.vulnerabilities.append(vulnerability)
+                    logging.warning(f"XSS vulnerability detected: {vulnerability}")
 
     def extract_form_details(self, form):
         """Extract form details."""
@@ -164,10 +166,13 @@ class XScanner:
                 data[input_tag['name']] = payload
             elif input_tag['type'] in ['hidden', 'password', 'email']:
                 data[input_tag['name']] = 'test'
-            elif input_tag['type'] == 'select':
-                data[input_tag['name']] = 'option1'
-            else:
-                data[input_tag['name']] = 'test'
+            elif input_tag['type'] in ['submit']:
+                data[input_tag['name']] = 'submit'
+            elif input_tag['type'] == 'checkbox':
+                data[input_tag['name']] = input_tag.get('value', 'on')
+            elif input_tag['type'] == 'radio':
+                if input_tag.get('checked'):
+                    data[input_tag['name']] = input_tag.get('value', 'on')
 
         try:
             if form_details['method'] == 'post':
@@ -201,8 +206,10 @@ class XScanner:
                         "param": param,
                         "payload": payload,
                     }
-                    self.vulnerabilities.append(vulnerability)
-                    logging.warning(f"XSS vulnerability detected: {vulnerability}")
+                    # Avoid false positives check
+                    if not self.is_false_positive(url, vulnerability):
+                        self.vulnerabilities.append(vulnerability)
+                        logging.warning(f"XSS vulnerability detected: {vulnerability}")
             except requests.RequestException as e:
                 logging.error(f"URL parameter testing failed for {modified_url}: {e}")
             
@@ -210,8 +217,17 @@ class XScanner:
 
     def detect_xss(self, response_text, payload):
         """Detect XSS in the response."""
-        xss_pattern = re.compile(re.escape(payload), re.IGNORECASE)
-        return xss_pattern.search(response_text) is not None
+        # Context-aware detection
+        if payload in response_text:
+            # Simple string match as an initial check
+            return True
+        return False
+
+    def is_false_positive(self, url, vulnerability):
+        """Check if the vulnerability is a false positive."""
+        # Implement logic to check if the vulnerability is a false positive
+        # Example: Check if payload is properly encoded or if it's executed in a context that allows XSS
+        return False  # Placeholder logic
 
     def export_vulnerabilities_to_json(self, filename):
         """Export vulnerabilities to a JSON file."""
