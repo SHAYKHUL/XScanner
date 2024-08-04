@@ -62,8 +62,7 @@ class XScanner:
         for payload in basic_payloads:
             for technique in obfuscation_techniques:
                 payloads.append(technique(payload))
-
-        # Additional advanced payloads targeting different contexts
+                
         additional_payloads = [
             "<img src=x onerror=alert(String.fromCharCode(88,83,83))>",
             "<svg><script>x='<img/'+'src=\"ht'\r+String.fromCharCode(116)+'p://ma'\r+String.fromCharCode(105)+'npage.com\"/>'; document.body.appendChild(document.createElement('img')).src=x;</script>",
@@ -138,7 +137,6 @@ class XScanner:
                     "payload": payload,
                     "form": form_details,
                 }
-                # Avoid false positives check
                 if not self.is_false_positive(url, vulnerability):
                     self.vulnerabilities.append(vulnerability)
                     logging.warning(f"XSS vulnerability detected: {vulnerability}")
@@ -206,7 +204,6 @@ class XScanner:
                         "param": param,
                         "payload": payload,
                     }
-                    # Avoid false positives check
                     if not self.is_false_positive(url, vulnerability):
                         self.vulnerabilities.append(vulnerability)
                         logging.warning(f"XSS vulnerability detected: {vulnerability}")
@@ -224,10 +221,7 @@ class XScanner:
         return False
 
     def is_false_positive(self, url, vulnerability):
-        """Check if the vulnerability is a false positive."""
-        # Implement logic to check if the vulnerability is a false positive
-        # Example: Check if payload is properly encoded or if it's executed in a context that allows XSS
-        return False  # Placeholder logic
+        pass
 
     def export_vulnerabilities_to_json(self, filename):
         """Export vulnerabilities to a JSON file."""
